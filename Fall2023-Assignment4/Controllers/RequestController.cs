@@ -6,28 +6,36 @@ using System.Threading.Tasks;
 using Fall2023_Assignment4.Data;
 using Fall2023_Assignment4.Models;
 using GoogleMaps.LocationServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Fall2023_Assignment4.Controllers
 {
+    //[Authorize(Roles = Const.Role.Admin + "," + Const.Role.Manager)]
     public class RequestController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public RequestController(ApplicationDbContext context)
+        private readonly IConfiguration _config;
+
+        public RequestController(ApplicationDbContext context, IConfiguration config)
         {
             _context = context;
+            _config = config; 
         }
 
         [HttpPost]
         public async Task<IActionResult> RequestAsync (Request r)
         {
+            var googleMapApiKey = _config["Restaurant:GoogleMapApiKey"];
+            var locationService = new GoogleLocationService(apikey: googleMapApiKey);
 
-            var locationService = new GoogleLocationService(apikey: "AIzaSyCWt_o5B-ILBsk8OtjKxCYzC_KR1z4tCGE");
             var point = locationService.GetLatLongFromAddress(r.Location);
 
-            var client = new Yelp.Api.Client("g1wbHjGxRh5TeoM1S0AugiKUj86UT4OQH0Xm1i1sifnf0gY1rDyBZHbCPzBOTgmKERqddUTrjYnAJ18a62SyDYAmYuLbaIvGplsv9urg6uLezb9gQrzUXA2g9ugcY3Yx");
+            var yelpApiKey = _config["Restaurant:YelpApiKey"];
+            var client = new Yelp.Api.Client(yelpApiKey);
 
             var results = await client.SearchBusinessesAllAsync(r.Category, point.Latitude, point.Longitude);
 

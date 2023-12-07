@@ -14,17 +14,22 @@ namespace Fall2023_Assignment4.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public RestaurantController(ApplicationDbContext context)
+        private readonly IConfiguration _config;
+
+        public RestaurantController(ApplicationDbContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         // GET: Restaurant
         public async Task<IActionResult> Index()
         {
-            var client = new Yelp.Api.Client("g1wbHjGxRh5TeoM1S0AugiKUj86UT4OQH0Xm1i1sifnf0gY1rDyBZHbCPzBOTgmKERqddUTrjYnAJ18a62SyDYAmYuLbaIvGplsv9urg6uLezb9gQrzUXA2g9ugcY3Yx");
-           
-            var results = await client.SearchBusinessesAllAsync("Cupcakes", 37.786882, -122.399972);
+
+            var yelpApiKey = _config["Restaurant:YelpApiKey"];
+            var client = new Yelp.Api.Client(yelpApiKey);
+
+            var results = await client.SearchBusinessesAllAsync("Restaurant", 37.786882, -122.399972);
 
             var businesses = results.Businesses;
 
@@ -80,7 +85,8 @@ namespace Fall2023_Assignment4.Controllers
                 return NotFound();
             }
 
-            var client = new Yelp.Api.Client("g1wbHjGxRh5TeoM1S0AugiKUj86UT4OQH0Xm1i1sifnf0gY1rDyBZHbCPzBOTgmKERqddUTrjYnAJ18a62SyDYAmYuLbaIvGplsv9urg6uLezb9gQrzUXA2g9ugcY3Yx");
+            var yelpApiKey = _config["Restaurant:YelpApiKey"];
+            var client = new Yelp.Api.Client(yelpApiKey);
 
             var reviews = await client.GetReviewsAsync(id);
 
