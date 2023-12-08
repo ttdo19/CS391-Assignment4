@@ -3,16 +3,17 @@ namespace Fall2023_Assignment4
 {
     public static class Const
     {
-        public static class Role
+        public static class Roles
         {
-            public const string Admin = "Admin";
+            public const string Administrator = "Administrator";
             public const string Manager = "Manager";
+            public const string User = "User";
         }
 
-        public static class Policy
+        public static class Policies
         {
-            public const string AdminAndManager = "AdminAndManagerPolicy";
-            public const string AdminOrManager = "AdminOrManagerPolicy";
+            public const string RequireManager = "RequireManager";
+            public const string RequireAdmin = "RequireAdmin";
         }
     }
 }
