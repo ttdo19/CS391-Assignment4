@@ -142,8 +142,6 @@ namespace Fall2023_Assignment4.Areas.Identity.Pages.Account
 
                     };
 
-
-                    /*
                     var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
 
@@ -159,7 +157,6 @@ namespace Fall2023_Assignment4.Areas.Identity.Pages.Account
                         claims.Add(new Claim("Roles", roleClaim));
 
                     }
-                    */
 
 
                     await _signInManager.SignInWithClaimsAsync(user, Input.RememberMe, claims);

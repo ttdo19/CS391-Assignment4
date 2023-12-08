@@ -12026,26 +12026,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jahan\\.nuget\\packages\\": {}
+    "/Users/trangdo/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jahan\\Desktop\\school\\fall 2023\\CS 391\\ass4\\Fall2023-Assignment4\\Fall2023-Assignment4.csproj",
+      "projectUniqueName": "/Users/trangdo/Projects/Fall2023-Assignment4/Fall2023-Assignment4/Fall2023-Assignment4.csproj",
       "projectName": "Fall2023-Assignment4",
-      "projectPath": "C:\\Users\\jahan\\Desktop\\school\\fall 2023\\CS 391\\ass4\\Fall2023-Assignment4\\Fall2023-Assignment4.csproj",
-      "packagesPath": "C:\\Users\\jahan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jahan\\Desktop\\school\\fall 2023\\CS 391\\ass4\\Fall2023-Assignment4\\obj\\",
+      "projectPath": "/Users/trangdo/Projects/Fall2023-Assignment4/Fall2023-Assignment4/Fall2023-Assignment4.csproj",
+      "packagesPath": "/Users/trangdo/.nuget/packages/",
+      "outputPath": "/Users/trangdo/Projects/Fall2023-Assignment4/Fall2023-Assignment4/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\jahan\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/trangdo/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "/usr/local/share/dotnet/library-packs": {},
+        "/usr/local/share/dotnet/sdk/7.0.311/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -12120,7 +12120,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.311/RuntimeIdentifierGraph.json"
       }
     }
   },
