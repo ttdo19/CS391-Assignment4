@@ -5,6 +5,8 @@ namespace Fall2023_Assignment4.Models
 	{
 		public Restaurant Restaurant { get; set; } = null!;
 
+		public string Vibe { get; set; } = null!;
+
 		public List<Review> Reviews { get; set; } = new List<Review>();
 
 	}

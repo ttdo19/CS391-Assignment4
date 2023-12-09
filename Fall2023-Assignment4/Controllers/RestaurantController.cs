@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Fall2023_Assignment4.Data;
 using Fall2023_Assignment4.Models;
+using Azure.AI.OpenAI;
 
 namespace Fall2023_Assignment4.Controllers
 {
@@ -106,15 +107,44 @@ namespace Fall2023_Assignment4.Controllers
                 return NotFound();
             }
 
+
+            var reviewTexts = await _context.Review
+                .Where(cs => cs.RestaurantId == id)
+                .Select(review => review.Text)
+                .ToListAsync();
+            var formattedReviews = reviewTexts
+                .Select((text, index) => $"{index + 1}. \"{text}\"")
+                .ToList();
+
+            string.Join("\n", formattedReviews);
+
+            var GptApiKey = _config["Restaurant:GptApiKey"];
+            var client = new OpenAIClient(GptApiKey);
+
+            var chatCompletionsOptions = new ChatCompletionsOptions()
+            {
+                Messages =
+                {
+                    new ChatMessage(ChatRole.System, $"You majored in Creative Writing and you are a restaurant critic. You will be given a list of reviews, and you will generate a phrase or a few words about the vibe or atmosphere"),
+                    new ChatMessage(ChatRole.User, $"generate a phrase or a few words about the vibe or atmosphere for restaurant {restaurant.Name} given the following reviews: {formattedReviews}."),
+                },
+                ChoiceCount = 1,
+            };
+
+            var request = await client.GetChatCompletionsAsync("gpt-3.5-turbo", chatCompletionsOptions);
+            var response = request.Value.Choices[0].Message.Content;
+
             var vm = new RestaurantDetailViewModel()
             {
                 Restaurant = restaurant,
+                Vibe = response,
                 Reviews = await _context.Review
                     .Where(cs => cs.RestaurantId == id)
                     .ToListAsync()
             };
 
             return View(vm);
+
         }
 
         // GET: Restaurant/Create

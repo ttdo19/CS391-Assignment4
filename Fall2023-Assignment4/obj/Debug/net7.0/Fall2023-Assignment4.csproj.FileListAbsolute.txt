@@ -877,3 +877,5 @@ C:\Users\jahan\Desktop\school\fall 2023\CS 391\ass4 - new\Fall2023-Assignment4\o
 C:\Users\jahan\Desktop\school\fall 2023\CS 391\ass4 - new\Fall2023-Assignment4\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\jahan\Desktop\school\fall 2023\CS 391\ass4 - new\Fall2023-Assignment4\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
 C:\Users\jahan\Desktop\school\fall 2023\CS 391\ass4 - new\Fall2023-Assignment4\bin\Debug\net7.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+C:\Users\jahan\Desktop\school\fall 2023\CS 391\ass4 - new\Fall2023-Assignment4\bin\Debug\net7.0\Azure.AI.OpenAI.dll
+C:\Users\jahan\Desktop\school\fall 2023\CS 391\ass4 - new\Fall2023-Assignment4\bin\Debug\net7.0\VaderSharp2.dll

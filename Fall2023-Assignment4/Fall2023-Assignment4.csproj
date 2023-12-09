@@ -20,6 +20,7 @@
     <None Remove="Core\ViewModels\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.12" />
@@ -27,6 +28,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+    <PackageReference Include="VaderSharp2" Version="3.3.2.1" />
     <PackageReference Include="Yelp.Api" Version="1.3.0" />
     <PackageReference Include="GoogleMaps.LocationServices" Version="1.2.0.5" />
   </ItemGroup>
