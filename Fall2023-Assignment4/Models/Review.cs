@@ -1,19 +1,27 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Fall2023_Assignment4.Models
 {
 	public class Review
 	{
-        public string Url { get; set; } = null!;
+		public string Id { get; set; } = null!;
 
-        public string? Text { get; set; } = null!;
+		[ForeignKey("Restaurant")]
+		public string RestaurantId { get; set; } = null!;
 
-		public User User { get; set; } = null!;
+        public string? Url { get; set; }
+
+        public string Text { get; set; } = null!;
+
+		public string? UserId { get; set; }
+
+		public string? UserName { get; set; }
 
 		public string? TimeCreated { get; set; }
 
-		public int? Rating { get; set; }
+		public double? Rating { get; set; }
 	}
 }
 

@@ -17,6 +17,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
     {
     }
     public DbSet<Fall2023_Assignment4.Models.Restaurant> Restaurant { get; set; } = default!;
+    public DbSet<Fall2023_Assignment4.Models.Review> Review { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder builder)
 
     {

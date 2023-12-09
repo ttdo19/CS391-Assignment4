@@ -61,6 +61,27 @@ namespace Fall2023_Assignment4.Controllers
                 restaurant.ZipCode = business.Location.ZipCode;
                 //restaurant.Hours = business.Hours; 
                 _context.Restaurant.Add(restaurant);
+
+                var reviews = await client.GetReviewsAsync(business.Id);
+
+                List<Review> reviewsList = new List<Review>();
+
+                foreach (var reviewResult in reviews.Reviews)
+                {
+                    string Id = Guid.NewGuid().ToString();
+                    var review = new Review();
+                    review.Id = Id;
+                    review.RestaurantId = restaurant.Id;
+                    review.Rating = reviewResult.Rating;
+                    review.Text = reviewResult.Text;
+                    review.TimeCreated = reviewResult.TimeCreated;
+                    review.Url = reviewResult.Url;
+                    review.UserId = null;
+                    review.UserName = reviewResult.User.Name;
+                    reviewsList.Add(review);
+                    _context.Review.Add(review);
+                }
+
             }
             await _context.SaveChangesAsync();
 
@@ -85,32 +106,14 @@ namespace Fall2023_Assignment4.Controllers
                 return NotFound();
             }
 
-            var yelpApiKey = _config["Restaurant:YelpApiKey"];
-            var client = new Yelp.Api.Client(yelpApiKey);
-
-            var reviews = await client.GetReviewsAsync(id);
-
-            List<Review> reviewsList = new List<Review>();
-
-            foreach (var reviewResult in reviews.Reviews)
-            {
-                var review = new Review();
-                review.Url = reviewResult.Url;
-                review.Rating = reviewResult.Rating;
-                review.Text = reviewResult.Text;
-                review.TimeCreated = reviewResult.TimeCreated;
-                review.User = new User();
-                review.User.Name = reviewResult.User.Name;
-                review.User.ImageUrl = reviewResult.User.ImageUrl;
-                reviewsList.Add(review);
-            }
-
             var vm = new RestaurantDetailViewModel()
             {
                 Restaurant = restaurant,
-                Reviews = reviewsList,
-
+                Reviews = await _context.Review
+                    .Where(cs => cs.RestaurantId == id)
+                    .ToListAsync()
             };
+
             return View(vm);
         }
 

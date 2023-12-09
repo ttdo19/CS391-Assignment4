@@ -92,12 +92,7 @@
             {
                 <tr>
                     <td class="col-sm-2">
-
-                        @if (item.User.ImageUrl != null)
-                        {
-                            <img src="@item.User.ImageUrl" width="30" height="30" />
-                        }
-                        <b>@Html.DisplayFor(modelItem => item.User.Name) </b>
+                        <b>@Html.DisplayFor(modelItem => item.UserName) </b>
                        
                     </td>
                     <td>
