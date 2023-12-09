@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Fall2023_Assignment4.Data;
+using Fall2023_Assignment4.Core.Repositories;
+using Fall2023_Assignment4.Repositories;
+using Fall2023_Assignment4;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,11 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+AddScoped();
+
+//Add authorization
+AddAuthorizationPolicies(); 
 
 var app = builder.Build();
 
@@ -43,3 +51,18 @@ app.MapRazorPages();
 
 app.Run();
 
+void AddAuthorizationPolicies()
+{
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy(Const.Policies.RequireAdmin, policy => policy.RequireRole(Const.Roles.Administrator));
+        options.AddPolicy(Const.Policies.RequireManager, policy => policy.RequireRole(Const.Roles.Manager));
+    });
+}
+
+void AddScoped()
+{
+    builder.Services.AddScoped<IUserRepository, UserRepository>();
+    builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(); 
+}

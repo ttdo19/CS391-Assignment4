@@ -1,11 +1,13 @@
 ﻿<Properties StartupConfiguration="{F9EFC4C3-34C8-4D2C-B37C-A45410321116}|https">
   <MonoDevelop.Ide.ItemProperties.Fall2023-Assignment4 PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MultiItemStartupConfigurations />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/trangdo/Projects/Fall2023-Assignment4/Fall2023-Assignment4/Areas/Identity/Pages/Account/Login.cshtml.cs" relfile="Fall2023-Assignment4/Areas/Identity/Pages/Account/Login.cshtml.cs" line="137" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Fall2023-Assignment4/Migrations/ApplicationDbContextModelSnapshot.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Fall2023-Assignment4/Areas/Identity/Pages/Account/Login.cshtml.cs">
     <Files>
       <File FileName="Fall2023-Assignment4/Program.cs" />
       <File FileName="Fall2023-Assignment4/Models/Restaurant.cs" />
@@ -19,15 +21,15 @@
       <File FileName="Fall2023-Assignment4/Views/Restaurant/Delete.cshtml" />
       <File FileName="Fall2023-Assignment4/Views/Restaurant/Details.cshtml" />
       <File FileName="Fall2023-Assignment4/Views/Restaurant/Index.cshtml" />
-      <File FileName="Fall2023-Assignment4/Views/Shared/_Layout.cshtml" Line="1" Column="1" />
+      <File FileName="Fall2023-Assignment4/Views/Shared/_Layout.cshtml" />
       <File FileName="Fall2023-Assignment4/Controllers/HomeController.cs" />
       <File FileName="Fall2023-Assignment4/Models/ErrorViewModel.cs" />
       <File FileName="Fall2023-Assignment4/Data/ApplicationDbContext.cs" />
-      <File FileName="Fall2023-Assignment4/Views/Shared/_LoginPartial.cshtml" Line="1" Column="1" />
-      <File FileName="Fall2023-Assignment4/Views/Shared/_ValidationScriptsPartial.cshtml" Line="1" Column="1" />
-      <File FileName="Fall2023-Assignment4/Controllers/RestaurantController.cs" Line="92" Column="1" />
+      <File FileName="Fall2023-Assignment4/Views/Shared/_LoginPartial.cshtml" />
+      <File FileName="Fall2023-Assignment4/Views/Shared/_ValidationScriptsPartial.cshtml" />
+      <File FileName="Fall2023-Assignment4/Controllers/RestaurantController.cs" />
       <File FileName="Fall2023-Assignment4/Models/Request.cs" />
-      <File FileName="Fall2023-Assignment4/Controllers/RequestController.cs" Line="15" Column="2" />
+      <File FileName="Fall2023-Assignment4/Controllers/RequestController.cs" />
       <File FileName="Fall2023-Assignment4/Views/Restaurant/Edit.cshtml" />
       <File FileName="Fall2023-Assignment4/Views/Home/Search.cshtml" />
       <File FileName="Fall2023-Assignment4/Views/Request/Request.cshtml" />
@@ -39,30 +41,51 @@
       <File FileName="Fall2023-Assignment4/Areas/Identity/Pages/_ViewStart.cshtml" />
       <File FileName="Fall2023-Assignment4/Views/Shared/Error.cshtml" />
       <File FileName="../../.microsoft/usersecrets/aspnet-Fall2023_Assignment4-1ed01182-2d5b-4053-99e3-9f3fbb42ccf9/secrets.json" />
-      <File FileName="Fall2023-Assignment4/Migrations/ApplicationDbContextModelSnapshot.cs" Line="1" Column="1" />
+      <File FileName="Fall2023-Assignment4/Migrations/ApplicationDbContextModelSnapshot.cs" />
+      <File FileName="Fall2023-Assignment4/Migrations/20231208052155_SeedRoles.cs" />
+      <File FileName="Fall2023-Assignment4/Areas/Identity/Pages/Account/Login.cshtml.cs" Line="137" Column="1" />
+      <File FileName="Fall2023-Assignment4/Areas/Identity/Pages/Account/Login.cshtml" />
+      <File FileName="Fall2023-Assignment4/Controllers/RoleController.cs" Line="20" Column="53" />
+      <File FileName="Fall2023-Assignment4/Views/User/Index.cshtml" Line="18" Column="42" />
+      <File FileName="Fall2023-Assignment4/Controllers/UserController.cs" Line="32" Column="55" />
+      <File FileName="Fall2023-Assignment4/Repositories/UserRepository.cs" />
+      <File FileName="Fall2023-Assignment4/Core/Repositories/IUnitOfWork.cs" />
+      <File FileName="Fall2023-Assignment4/Repositories/UnitOfWork.cs" />
+      <File FileName="Fall2023-Assignment4/Views/User/Edit.cshtml" />
+      <File FileName="Fall2023-Assignment4/Core/ViewModels/EditUserViewModel.cs" />
+      <File FileName="Fall2023-Assignment4/Data/ApplicationUser.cs" />
+      <File FileName="Fall2023-Assignment4/Core/Repositories/IRoleRepository.cs" />
+      <File FileName="Fall2023-Assignment4/Repositories/RoleRepository.cs" />
+      <File FileName="Fall2023-Assignment4/Areas/Identity/Pages/Account/Register.cshtml" />
+      <File FileName="Fall2023-Assignment4/Areas/Identity/Pages/Account/Register.cshtml.cs" />
+      <File FileName="Fall2023-Assignment4/Areas/Identity/Pages/Account/Logout.cshtml.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Fall2023-Assignment4" expanded="True">
-            <Node name="Fall2023-Assignment4" expanded="True">
-              <Node name="Dependencies" selected="True" />
-              <Node name="Data" expanded="True" />
-              <Node name="Migrations" expanded="True" />
-              <Node name="Models" expanded="True" />
-              <Node name="Properties" expanded="True" />
+            <Node name="Fall2023-Assignment4">
+              <Node name="Areas" expanded="True">
+                <Node name="Identity" expanded="True">
+                  <Node name="Pages" expanded="True">
+                    <Node name="Account" expanded="True">
+                      <Node name="Login.cshtml" expanded="True">
+                        <Node name="Login.cshtml.cs" selected="True" />
+                      </Node>
+                    </Node>
+                  </Node>
+                </Node>
+              </Node>
+              <Node name="Controllers" expanded="True" />
               <Node name="Views" expanded="True">
-                <Node name="Shared" expanded="True" />
+                <Node name="User" expanded="True" />
               </Node>
               <Node name="wwwroot" expanded="True" />
             </Node>
           </Node>
         </State>
       </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
-      </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
 </Properties>

@@ -117,52 +117,32 @@ namespace Fall2023_Assignment4.Areas.Identity.Pages.Account
                 var user = await _signInManager.UserManager.FindByNameAsync(Input.Email);
 
                 if (user == null)
-
                 {
-
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-
                     return Page();
 
                 }
 
-
-
                 var result = await _signInManager.CheckPasswordSignInAsync(user, Input.Password, false);
 
                 if (result.Succeeded)
-
                 {
-
                     var claims = new List<Claim>
-
                     {
-
                         new Claim("amr", "pwd"),
-
                     };
 
                     var roles = await _signInManager.UserManager.GetRolesAsync(user);
 
-
-
                     if (roles.Any())
-
                     {
 
                         //"Manager,User"
-
                         var roleClaim = string.Join(",", roles);
-
                         claims.Add(new Claim("Roles", roleClaim));
 
                     }
-
-
                     await _signInManager.SignInWithClaimsAsync(user, Input.RememberMe, claims);
-
-
-
                     _logger.LogInformation("User logged in.");
 
                     return LocalRedirect(returnUrl);
