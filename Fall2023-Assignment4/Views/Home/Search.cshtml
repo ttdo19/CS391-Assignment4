@@ -3,7 +3,10 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<div>
+    <h1>Search</h1>
+    <p>Enter your location, what you are looking for, and click on the "Search" button!</p>
+</div>
 @using (Html.BeginForm("Request", "Request", FormMethod.Post))
 {
     <b>Location: </b> @Html.TextBoxFor(model => model.Location)
