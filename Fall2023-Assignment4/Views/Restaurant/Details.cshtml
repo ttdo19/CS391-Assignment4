@@ -113,6 +113,21 @@
             }
         </tbody>
     </table>
+
+    <form asp-action="AddReview" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" name="id" asp-for="Restaurant.Id" />
+        <select name="rating" placeholder="Your Rating: ">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <input type="text" name="text" placeholder="Your Review">
+        <input type="submit" value="Add Review" class="btn btn-primary" />
+    </form>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Restaurant.Id">Edit</a> |

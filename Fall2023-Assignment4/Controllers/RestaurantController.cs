@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Fall2023_Assignment4.Data;
 using Fall2023_Assignment4.Models;
 using Azure.AI.OpenAI;
+using static Fall2023_Assignment4.Const;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace Fall2023_Assignment4.Controllers
 {
@@ -107,7 +111,6 @@ namespace Fall2023_Assignment4.Controllers
                 return NotFound();
             }
 
-
             var reviewTexts = await _context.Review
                 .Where(cs => cs.RestaurantId == id)
                 .Select(review => review.Text)
@@ -144,7 +147,6 @@ namespace Fall2023_Assignment4.Controllers
             };
 
             return View(vm);
-
         }
 
         // GET: Restaurant/Create
@@ -183,6 +185,55 @@ namespace Fall2023_Assignment4.Controllers
                 return NotFound();
             }
             return View(restaurant);
+        }
+
+        public async Task<IActionResult> AddReview(string id)
+        {
+            if (id == null || _context.Restaurant == null)
+            {
+                return NotFound();
+            }
+
+            var restaurant = await _context.Restaurant.FindAsync(id);
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+            return View(restaurant);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{Const.Roles.User}")]
+        public async Task<IActionResult> AddReview(string id, string text, int rating)
+        {
+            var restaurant = await _context.Restaurant.FindAsync(id);
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+
+            string Id = Guid.NewGuid().ToString();
+            DateTime currentTime = DateTime.Now;
+            string formattedTime = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+            string userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            string userName = User.Identity?.Name;
+
+            var review = new Review();
+            review.Id = Id;
+            review.RestaurantId = id;
+            review.Rating = rating;
+            review.Text = text;
+            review.TimeCreated = formattedTime;
+            review.Url = null;
+            review.UserId = userId;
+            review.UserName = userName;
+
+            _context.Review.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id });
         }
 
         // POST: Restaurant/Edit/5
