@@ -11,7 +11,7 @@ using Azure.AI.OpenAI;
 using static Fall2023_Assignment4.Const;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-
+using Fall2023_Assignment4.Core.Repositories;
 
 namespace Fall2023_Assignment4.Controllers
 {
@@ -19,12 +19,18 @@ namespace Fall2023_Assignment4.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly IConfiguration _config;
 
-        public RestaurantController(ApplicationDbContext context, IConfiguration config)
+        public RestaurantController(ApplicationDbContext context, IConfiguration config, SignInManager<ApplicationUser> signInManager, IUnitOfWork unitOfWork)
         {
             _context = context;
             _config = config;
+            _signInManager = signInManager;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Restaurant
@@ -150,6 +156,7 @@ namespace Fall2023_Assignment4.Controllers
         }
 
         // GET: Restaurant/Create
+        [Authorize(Roles = Const.Roles.Administrator)]
         public IActionResult Create()
         {
             return View();
@@ -158,6 +165,7 @@ namespace Fall2023_Assignment4.Controllers
         // POST: Restaurant/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = Const.Roles.Administrator)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Rating,Price,PhoneNumber,CategoryTitle,ReviewCount,ImageUrl,City,Country,State,Address1,ZipCode,Address2,Address3,IsOpenNow,Longitude,Latitude")] Restaurant restaurant)
@@ -171,6 +179,7 @@ namespace Fall2023_Assignment4.Controllers
             return View(restaurant);
         }
 
+        [Authorize(Roles = Const.Roles.Administrator)]
         // GET: Restaurant/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -187,6 +196,7 @@ namespace Fall2023_Assignment4.Controllers
             return View(restaurant);
         }
 
+        [Authorize(Roles = Const.Roles.User)]
         public async Task<IActionResult> AddReview(string id)
         {
             if (id == null || _context.Restaurant == null)
@@ -239,6 +249,8 @@ namespace Fall2023_Assignment4.Controllers
         // POST: Restaurant/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+        [Authorize(Roles = Const.Roles.Administrator)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Rating,Price,PhoneNumber,CategoryTitle,ReviewCount,ImageUrl,City,Country,State,Address1,ZipCode,Address2,Address3,IsOpenNow,Longitude,Latitude")] Restaurant restaurant)
@@ -271,6 +283,7 @@ namespace Fall2023_Assignment4.Controllers
             return View(restaurant);
         }
 
+        [Authorize(Roles = Const.Roles.Administrator)]
         // GET: Restaurant/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
@@ -289,6 +302,7 @@ namespace Fall2023_Assignment4.Controllers
             return View(restaurant);
         }
 
+        [Authorize(Roles = Const.Roles.Administrator)]
         // POST: Restaurant/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -303,14 +317,184 @@ namespace Fall2023_Assignment4.Controllers
             {
                 _context.Restaurant.Remove(restaurant);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool RestaurantExists(string id)
         {
-          return (_context.Restaurant?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Restaurant?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
+        //Favorite Restaurant
+        [Authorize(Roles = Const.Roles.User)]
+        [HttpPost, ActionName("Favorite")]
+        public async Task<IActionResult> Favorite(string? id)
+        {
+            //Find user
+            ApplicationUser user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+            var favoriteRestaurantIdInDb = await _context.ApplicationUserRestaurants
+               .Where(u => u.ApplicationUserId == user.Id)
+               .Select(r => r.RestaurantId!)
+               .ToListAsync();
+
+            var favoriteRestaurant = new List<Restaurant>();
+
+            foreach (var restaurantId in favoriteRestaurantIdInDb)
+            {
+                var restaurantItem = await _context.Restaurant
+                .FirstOrDefaultAsync(m => m.Id == restaurantId);
+                if (restaurantItem == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    favoriteRestaurant.Add(restaurantItem);
+                }
+            }
+
+            if (id == null) return View(favoriteRestaurant);
+
+            var restaurant = await _context.Restaurant
+              .FirstOrDefaultAsync(m => m.Id == id);
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+
+
+            if (id == null || _context.Restaurant == null || user == null)
+            {
+                return NotFound();
+            }
+            var favoriteUsersIdInDb = await _context.ApplicationUserRestaurants
+                .Where(r => r.RestaurantId == id)
+                .Select(u => u.ApplicationUserId!)
+                .ToListAsync();
+
+
+
+            restaurant.FavoriteUsers = new List<ApplicationUser>();
+
+            var restaurantIsFavorite = 0;
+
+            //If this restaurant has never been favorite by any user, then just add the users to the Favorite User list
+            if (favoriteUsersIdInDb == null || favoriteUsersIdInDb.Count == 0)
+            {
+                restaurant.FavoriteCount++;
+                restaurant.FavoriteUsers.Add(user);
+                favoriteRestaurant.Add(restaurant);
+            }
+            else
+            {
+                foreach (var userId in favoriteUsersIdInDb)
+                {
+                    //if the user already favorites the restaurant, do nothing
+                    if (userId == user.Id)
+                    {
+                        restaurantIsFavorite = 1;
+                    }
+                }
+                if (restaurantIsFavorite == 1) return View(favoriteRestaurant);
+                else
+                {
+                    restaurant.FavoriteCount++;
+                    restaurant.FavoriteUsers.Add(user);
+                    favoriteRestaurant.Add(restaurant);
+                }
+            }
+            _context.Update(restaurant);
+            await _context.SaveChangesAsync();
+            return View(favoriteRestaurant);
+        }
+
+        [Authorize(Roles = Const.Roles.User)]
+        [HttpGet]
+        public async Task<IActionResult> SeeFavorite()
+        {
+            //Find user
+            ApplicationUser user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+            var favoriteRestaurantIdInDb = await _context.ApplicationUserRestaurants
+               .Where(u => u.ApplicationUserId == user.Id)
+               .Select(r => r.RestaurantId!)
+               .ToListAsync();
+
+            var favoriteRestaurant = new List<Restaurant>();
+
+            foreach (var restaurantId in favoriteRestaurantIdInDb)
+            {
+                var restaurantItem = await _context.Restaurant
+                .FirstOrDefaultAsync(m => m.Id == restaurantId);
+                if (restaurantItem == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    favoriteRestaurant.Add(restaurantItem);
+                }
+            }
+
+            return View(favoriteRestaurant);
+
+        }
+
+        //Unfavorite a restaurant
+        [Authorize(Roles = Const.Roles.User)]
+        [HttpPost]
+        public async Task<IActionResult> Unfavorite(string id)
+        {
+            //Find user
+            ApplicationUser user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+            //Get the list of restaurants favored by this user
+            var favoriteRestaurantIdInDb = await _context.ApplicationUserRestaurants
+               .Where(u => u.ApplicationUserId == user.Id)
+               .Select(r => r.RestaurantId!)
+               .ToListAsync();
+
+            var favoriteRestaurant = new List<Restaurant>();
+
+            foreach (var restaurantId in favoriteRestaurantIdInDb)
+            {
+                var restaurantItem = await _context.Restaurant
+                .FirstOrDefaultAsync(m => m.Id == restaurantId);
+                if (restaurantItem == null || restaurantItem.Id == id)
+                {
+                    continue;
+                }
+                else
+                {
+                    favoriteRestaurant.Add(restaurantItem);
+                }
+            }
+
+            var restaurant = await _context.Restaurant
+             .FirstOrDefaultAsync(m => m.Id == id);
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+
+
+            if (id == null || _context.Restaurant == null || user == null)
+            {
+                return NotFound();
+            }
+            //Get the users who like this restaurant
+            _context.Remove(_context.ApplicationUserRestaurants.Single(a => a.RestaurantId == id && a.ApplicationUserId == user.Id));
+            restaurant.FavoriteCount--;
+            _context.Update(restaurant);
+
+            await _context.SaveChangesAsync();
+            return View(favoriteRestaurant);
+
+        }
+
     }
 }

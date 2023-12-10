@@ -89,6 +89,21 @@ namespace Fall2023_Assignment4.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Fall2023_Assignment4.Models.ApplicationUserRestaurant", b =>
+                {
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RestaurantId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ApplicationUserId", "RestaurantId");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("ApplicationUserRestaurants");
+                });
+
             modelBuilder.Entity("Fall2023_Assignment4.Models.Restaurant", b =>
                 {
                     b.Property<string>("Id")
@@ -111,6 +126,9 @@ namespace Fall2023_Assignment4.Migrations
 
                     b.Property<string>("Country")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("FavoriteCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
@@ -149,6 +167,39 @@ namespace Fall2023_Assignment4.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Restaurant");
+                });
+
+            modelBuilder.Entity("Fall2023_Assignment4.Models.Review", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double?>("Rating")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("RestaurantId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TimeCreated")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Review");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -281,6 +332,21 @@ namespace Fall2023_Assignment4.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Fall2023_Assignment4.Models.ApplicationUserRestaurant", b =>
+                {
+                    b.HasOne("Fall2023_Assignment4.Data.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Fall2023_Assignment4.Models.Restaurant", null)
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
