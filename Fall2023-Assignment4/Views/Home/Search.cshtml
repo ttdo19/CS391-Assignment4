@@ -1,5 +1,9 @@
 ﻿@model Fall2023_Assignment4.Models.Request
 
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 @using (Html.BeginForm("Request", "Request", FormMethod.Post))
 {
     <b>Location: </b> @Html.TextBoxFor(model => model.Location)

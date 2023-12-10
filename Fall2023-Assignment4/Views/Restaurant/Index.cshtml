@@ -3,13 +3,14 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Restaurants</h1>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table datatables table-responsive">
     <thead>
         <tr>
             <th>
