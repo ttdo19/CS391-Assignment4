@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Fall2023_Assignment4.Models.Restaurant>
+﻿@model Fall2023_Assignment4.Models.RequestDetailViewModel
 
 
 @{
@@ -12,38 +12,38 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
+                ImageUrl
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Rating)
+                Rating
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                Price
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
+                PhoneNumber
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryTitle)
+                CategoryTitle
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReviewCount)
+                ReviewCount
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.City)
+                model.City
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsOpenNow)
+                IsOpenNow
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Restaurants)
         {
             <tr>
                 <td>
@@ -86,3 +86,44 @@
         }
     </tbody>
 </table>
+
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
+
+@section Scripts{
+    <script>
+        var chartContainer = document.getElementById('chartContainer');
+        if (chartContainer) {
+            //var dataa = @Html.Raw(Json.Serialize(Model.PriceData));
+            //var dataString = Json.parse(dataa);
+            var data = @Html.Raw(Model.PriceData);
+            var priceData = []
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    priceData.push({
+                        label: key,
+                        y: data[key]
+                    });
+                }
+            }
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                theme: "light2",
+                exportEnabled: true,
+                title: {
+                    text: "Restaurant Prices"
+                },
+                axisY: {
+                    title: "No. of Restaurants"
+                },
+                data: [{
+                    type: "column",
+                    dataPoints: priceData
+                }]
+            });
+            chart.render();
+        }
+    </script>
+
+}

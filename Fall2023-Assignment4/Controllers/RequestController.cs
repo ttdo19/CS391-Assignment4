@@ -13,7 +13,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Printing;
+using System.Web.Helpers;
+using Azure;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Data;
+using Newtonsoft.Json;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace Fall2023_Assignment4.Controllers
 {
@@ -101,9 +106,75 @@ namespace Fall2023_Assignment4.Controllers
 
             }
 
+            var prices = RestaurantList.Select(r => r.Price).ToList();
+
+            var count = new Dictionary<string, int>
+            {
+                { "$", prices.Count(p => p == "$") },
+                { "$$", prices.Count(p => p == "$$") },
+                { "$$$", prices.Count(p => p == "$$$") }
+            };
+            
             await _context.SaveChangesAsync();
 
-            return View(RestaurantList); 
+            var vm = new RequestDetailViewModel()
+            {
+                Restaurants = RestaurantList,
+                PriceData = JsonConvert.SerializeObject(count)
+            };
+
+            return View(vm);
+        }
+
+
+        [Authorize(Roles = Const.Roles.User)]
+        public async Task<IActionResult> AddReview(string id)
+        {
+            if (id == null || _context.Restaurant == null)
+            {
+                return NotFound();
+            }
+
+            var restaurant = await _context.Restaurant.FindAsync(id);
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+            return View(restaurant);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = $"{Const.Roles.User}")]
+        public async Task<IActionResult> AddReview(string id, string text, int rating)
+        {
+            var restaurant = await _context.Restaurant.FindAsync(id);
+            if (restaurant == null)
+            {
+                return NotFound();
+            }
+
+            string Id = Guid.NewGuid().ToString();
+            DateTime currentTime = DateTime.Now;
+            string formattedTime = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+            string userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            string userName = User.Identity?.Name;
+
+            var review = new Review();
+            review.Id = Id;
+            review.RestaurantId = id;
+            review.Rating = rating;
+            review.Text = text;
+            review.TimeCreated = formattedTime;
+            review.Url = null;
+            review.UserId = userId;
+            review.UserName = userName;
+
+            _context.Review.Add(review);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id });
         }
 
         // GET: Restaurant/Details/5

@@ -5,6 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+@{
+    string currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+
 <h1>Details</h1>
 
 <div>
@@ -107,12 +112,34 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Text)
-                        <a href="@item.Url" target="_blank">(Read full review)</a>
+                        @if (!string.IsNullOrEmpty(item.Url))
+                        {
+                            <a href="@item.Url" target="_blank">(Read full review)</a>
+                        }
+                        @if (!string.IsNullOrEmpty(currentUserId) && item.UserId == currentUserId)
+                        {
+                            <span>(Yoy posted this on @item.TimeCreated)</span>
+                        }
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+
+    <form asp-action="AddReview" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" name="id" asp-for="Restaurant.Id" />
+        <select name="rating" placeholder="Your Rating: ">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <input type="text" name="text" placeholder="Your Review">
+        <input type="submit" value="Add Review" class="btn btn-primary" />
+    </form>
+
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Restaurant.Id">Edit</a> |
